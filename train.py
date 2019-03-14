@@ -4,6 +4,7 @@ sys.path.append(os.pardir)
 import numpy as np
 from dataset.mnist import load_mnist
 from two_layer_net import TwoLayerNet
+import time
 
 #MNISTデータの読み込み
 (x_train, t_train), (x_test, t_test) = load_mnist(normalize = True, one_hot_label = True)
@@ -21,6 +22,7 @@ test_acc_list = []
 
 iter_per_epoch = max(train_size / batch_size, 1)
 
+start_time = time.time()
 for i in range(iters_num):
     batch_mask = np.random.choice(train_size, batch_size)
     x_batch = x_train[batch_mask]
@@ -43,4 +45,6 @@ for i in range(iters_num):
         train_acc_list.append(train_acc)
         test_acc_list.append(test_acc)
         print(train_acc, test_acc)
-        
+
+print(time.time() - start_time)
+
