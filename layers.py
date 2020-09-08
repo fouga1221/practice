@@ -1,5 +1,5 @@
 import numpy as np
-from function import *
+from functions import *
 
 class Relu:
     def __init__(self):
@@ -13,46 +13,46 @@ class Relu:
         return out
 
     def backward(self, dout):
-        dout[self.mask] = 0
-        dx = dout
+        dx = dout.copy()
+        dx[self.mask] = 0
 
         return dx
 
 class Sigmoid:
-        def __init__(self):
-            self.out = None
+    def __init__(self):
+        self.out = None
 
-        def forward(self, x):
-            out = sigmoid(x)
-            self.out = out
-            return out
+    def forward(self, x):
+        out = sigmoid(x)
+        self.out = out
 
-        def backward(self, dout):
-            tmp = dout * (1.0 - self.out)
-            dx = tmp * self.out
+        return out
 
-            return dx
+    def backward(self, dout):
+        dx = dout * self.out * (1.0 - self.out)
+
+        return dx
 
 class Affine:
-    def __init__(self, W, b):
-        self.W = W
+    def __init__(self, w, b):
+        self.w = w
         self.b = b
 
         self.x = None
-        self.dW = None
+        self.dw = None
         self.db = None
 
     def forward(self, x):
         self.x = x
-        out = np.dot(self.x, self.W) + self.b
-        
+        out = np.dot(self.x, self.w) + self.b
+
         return out
 
     def backward(self, dout):
-        dx = np.dot(dout, self.W.T)
-        self.dW = np.dot(self.x.T, dout)
+        dx = np.dot(dout, self.w.T)
+        self.dw = np.dot(self.x.T, dout)
         self.db = np.sum(dout, axis = 0)
-
+        
         return dx
 
 class SoftmaxWithLoss:
@@ -73,3 +73,4 @@ class SoftmaxWithLoss:
         dx = (self.y - self.t) / batch_size
 
         return dx
+
